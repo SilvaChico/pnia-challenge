@@ -26,7 +26,9 @@ fs.readFile("resorces/prefixes.txt", "utf8", function(err, data) {
 app.post("/aggregate", async(req, res) => {
 
     const phoneNumbers = req.body;
-    let result = '';
+    let result = {};
+    let validRequest = true;
+    let invalidNumber;
 
     for (let i = 0; i < phoneNumbers.length; i++) {
 
@@ -35,18 +37,40 @@ app.post("/aggregate", async(req, res) => {
         //Displays error if it is an invalid number
         const sector = await getSector(phoneNumber);
 
+        if (sector === undefined) {
+            validRequest = false;
+            invalidNumber = phoneNumber;
+        }
+
+        //Removes 00 or + from the start of the phone number and blanks
         const normalizedPhoneNumber = phoneNumber.replace(/^00|^\+/, '').trim();
-        console.log(normalizedPhoneNumber);
+
+        //Gets the prefix
         const prefix = prefixesArray.filter((prefix) =>
             normalizedPhoneNumber.startsWith(prefix)
         );
 
-        result += `*** ${phoneNumber} sector: ${sector} prefix: ${prefix}`;
+        if (prefix === undefined) {
+            validRequest = false;
+            invalidNumber = phoneNumber;
+        }
+
+        console.log(`PhoneNumer: ${phoneNumber} sector: ${sector} prefix: ${prefix}`);
+
+        result[prefix] === undefined ? result[prefix] = {} : true;
+        result[prefix][sector] === undefined ?
+            (result[prefix][sector] = 1) :
+            result[prefix][sector]++;
+
     }
 
     console.log(result);
 
-    res.send(result);
+    if (validRequest)
+        res.send(result);
+    else
+        res.status(400).send(`The request contains an invalid number: ${invalidNumber}`);
+
 
 });
 
