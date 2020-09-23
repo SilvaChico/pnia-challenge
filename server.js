@@ -1,19 +1,47 @@
 const express = require("express");
 const app = express();
 const axios = require("axios");
+const fs = require("fs");
 
 app.use(express.json());
 
+let prefixesArray = [];
 
+//Load prefixes file
+fs.readFile("resorces/prefixes.txt", "utf8", function(err, data) {
+
+    if (err) {
+        return console.log(err);
+    }
+    const fileArray = data.split('\n');
+
+    //removes empty lines
+    prefixesArray = fileArray.filter(function(str) {
+        return /\S/.test(str);
+    });
+
+});
+
+//aggregate endpoint
 app.post("/aggregate", async(req, res) => {
 
     const phoneNumbers = req.body;
     let result = '';
 
     for (let i = 0; i < phoneNumbers.length; i++) {
+
         const phoneNumber = phoneNumbers[i];
+
+        //Displays error if it is an invalid number
         const sector = await getSector(phoneNumber);
-        result += `*** ${phoneNumber} sector: ${sector}`;
+
+        const normalizedPhoneNumber = phoneNumber.replace(/^00|^\+/, '').trim();
+        console.log(normalizedPhoneNumber);
+        const prefix = prefixesArray.filter((prefix) =>
+            normalizedPhoneNumber.startsWith(prefix)
+        );
+
+        result += `*** ${phoneNumber} sector: ${sector} prefix: ${prefix}`;
     }
 
     console.log(result);
@@ -22,7 +50,7 @@ app.post("/aggregate", async(req, res) => {
 
 });
 
-
+//Business sector API request
 async function getSector(phoneNumber) {
 
     try {
