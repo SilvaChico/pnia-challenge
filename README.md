@@ -1,5 +1,14 @@
 # pnia v1.1
 
+The application starts by running:
+```
+$npm install
+
+$npm run start
+
+```
+
+
 # Phone number information aggregator
 This system takes a list of phone numbers obtained from user input and returns
 the count of valid phones broken down per prefix and per business sector.
