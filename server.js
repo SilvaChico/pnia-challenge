@@ -9,7 +9,7 @@ app.use(cors());
 
 //Load prefixes file when server starts
 let prefixesArray;
-fs.readFile("resorces/prefixes.txt", "utf8", function(err, data) {
+fs.readFile("resources/prefixes.txt", "utf8", function(err, data) {
     if (err) {
         return console.log(err);
     }
