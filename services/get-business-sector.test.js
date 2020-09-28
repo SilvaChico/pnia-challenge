@@ -1,6 +1,6 @@
 /*** @jest-environment node*/
 
-const getSector = require("./getBusinessSector");
+const getSector = require("./get-business-sector");
 
 describe("Unit tests for get business sector ", () => {
 

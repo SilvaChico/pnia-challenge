@@ -1,4 +1,4 @@
-const loadPrefixes = require("./loadPrefixesFile.js");
+const loadPrefixes = require("./load-prefixes-file.js");
 
 describe("Unit tests for load prefixes ", () => {
 

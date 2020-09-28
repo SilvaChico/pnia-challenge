@@ -2,6 +2,7 @@ const fs = require("fs");
 const error = "Error, file not found";
 
 //Load prefixes file when server starts
+//TODO filepath, fileName
 const loadPrefixesFile = (filePathName) => {
 
     try {
