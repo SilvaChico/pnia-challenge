@@ -1,5 +1,4 @@
 const getSector = require("./get-business-sector.js");
-const normalizePhoneNumber = require("./normalize-phone-num.js");
 const getPrefix = require("./get-prefix");
 
 async function aggPhoneNum(phoneNumbers, prefixesArray) {
